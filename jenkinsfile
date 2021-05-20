@@ -1,0 +1,23 @@
+node{
+        stage("Git clone"){
+        
+                git credentialsId: 'githubcre', url: 'https://github.com/abhay4291/maven-web-application.git'
+            
+           }
+
+      stage ('maven clean build') {
+  
+           def mavenHome = tool name: "maven" , type: "maven"
+           def mavenCMD = "${mavenHome}/bin/mvn"
+           sh "${mavenCMD} clean package"
+        }
+        
+        stage("Deploy to containe"){
+            deploy adapters: [tomcat9(credentialsId: 'tomcatcre', path: '', url: 'http://3.19.68.49:8090')], contextPath: null, war: '**/*.war'
+            
+        }
+        
+    }
+
+
+
